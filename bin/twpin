@@ -1,0 +1,97 @@
+#!/usr/bin/perl -w
+use Net::Twitter;
+use Getopt::Long;
+use App::Twpin ':all';
+use Carp qw/carp croak/;
+
+our $VERSION = 0.001;
+
+my @commands = qw/config update/;
+my $cmd      = shift @ARGV;
+
+my $twpin;
+
+if (!defined $cmd) {
+    usage();
+} elsif ($cmd eq 'config') {
+    my ($user, $password, $apiurl, %opt);
+    GetOptions(
+        "user=s"   => \$user,
+        "pass=s"   => \$pass,
+        "apiurl=s" => \$apiurl,
+    ) or usage();
+
+    !$user && !$pass && !$apiurl && usage();
+    $user   and $opt{user}   = $user;
+    $pass   and $opt{pass}   = $pass;
+    $apiurl and $opt{apiurl} = $apiurl;
+
+    tw_config(%opt);
+} elsif ($cmd eq 'update') {
+    tw_update(get_instance(), @ARGV);
+} elsif ($cmd eq 'recent') {
+    tw_list(get_instance());
+} else {
+    usage();
+}
+
+sub usage {
+    print STDERR <<"usage";
+
+twpin version $VERSION
+twpin config [-u|--user] [-p|--pass] [-a|--apiurl]
+        build or rebuild configuration file
+      recent
+        list recent tweets
+      update "tweets"
+        update tweets to twitter
+      help
+        show this message
+
+usage
+    exit;
+}
+
+sub get_instance {
+
+    if (!$twpin) {
+        $twpin = Net::Twitter->new(
+            traits => [qw/API::REST/],
+            tw_load_config(),
+        ) or croak "error";
+    }
+    return $twpin;
+}
+
+__END__
+=head1 NAME1
+
+twpin - Just another command line twitter client
+
+=head1 VERSION
+
+version 0.001
+
+=head1 SYNOPSIS
+    
+    twpin config -u username -p password
+    twpin config -a 'http://url/twip'
+    twpin update "hello twitter"
+    twpin recent
+    twpin help
+
+=head1 DESCRIPTION
+
+C<twpin> is a script for you to access twitter from command line
+
+twip L<http://code.google.com/p/twip/> is a twitter API proxy in PHP. This script is created mainly because I can not find a good twitter client that supports this proxy 
+
+=head1 AUTHOR
+
+woosley.xu<redicaps@gmail.com>
+
+=head1 COPYRIGHT & LICENSE
+
+This software is copyright (c) 2010 by woosley.xu.
+
+This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.

@@ -1,0 +1,17 @@
+---
+abstract: 'command line twitter tool'
+author:
+  - woosley.xu
+generated_by: 'Dist::Zilla version 1.100160'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: App-Twpin
+requires:
+  ExtUtils::MakeMaker: 6.11
+  Net::Twitter: 3.12000
+  Tie::File: 0
+resources:
+  repository: http://github.com/woosley/Perl-App-Twpin
+version: 0.001
