@@ -1,5 +1,5 @@
 ---
-abstract: 'command line twitter tool'
+abstract: 'Just Another Command Line Twitter Client'
 author:
   - woosley.xu
 generated_by: 'Dist::Zilla version 1.100160'
@@ -14,4 +14,4 @@ requires:
   Tie::File: 0
 resources:
   repository: http://github.com/woosley/Perl-App-Twpin
-version: 0.001
+version: 0.002

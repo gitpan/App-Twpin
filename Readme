@@ -1,18 +1,22 @@
-NAME1
-    App::Twpin - command line twitter client
+NAME
+    twpin - Just Another Command Line Twitter Client
 
 SYNOPSIS
         twpin config -u username -p password
         twpin config -a 'http://url/twip'
         twpin update "hello twitter"
+        twpin status 
         twpin help
 
 DESCRIPTION
     "twpin" is a script for you to access twitter from command line
 
     twip <http://code.google.com/p/twip/> is a twitter API proxy in PHP.
-    This module is created mainly because I can not find a good twitter
-    client that supports proxy
+    This script is created mainly because I can not find a good twitter
+    client that supports this proxy
+
+    Configration file is located at $HOME/.twpinrc, you can just edit this
+    file and add your username/password there.
 
 AUTHOR
     woosley.xu<redicaps@gmail.com>

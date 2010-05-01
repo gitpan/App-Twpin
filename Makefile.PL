@@ -15,11 +15,11 @@ my %WriteMakefileArgs = (
                        'NAME' => 'App::Twpin',
                        'DISTNAME' => 'App-Twpin',
                        'AUTHOR' => 'woosley.xu',
-                       'ABSTRACT' => 'command line twitter tool',
+                       'ABSTRACT' => 'Just Another Command Line Twitter Client',
                        'EXE_FILES' => [
                                         'bin/twpin'
                                       ],
-                       'VERSION' => '0.001',
+                       'VERSION' => '0.002',
                        'LICENSE' => 'perl',
                        'PREREQ_PM' => {
                                         'ExtUtils::MakeMaker' => '6.11',

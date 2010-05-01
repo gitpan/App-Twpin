@@ -1,10 +1,11 @@
 #!/usr/bin/perl -w
 use Net::Twitter;
 use Getopt::Long;
+use lib '../lib';
 use App::Twpin ':all';
 use Carp qw/carp croak/;
 
-our $VERSION = 0.001;
+our $VERSION = 0.002;
 
 my @commands = qw/config update/;
 my $cmd      = shift @ARGV;
@@ -27,10 +28,18 @@ if (!defined $cmd) {
     $apiurl and $opt{apiurl} = $apiurl;
 
     tw_config(%opt);
+} elsif ($cmd eq 'follow') {
+    my $user;
+    usage() unless $user = shift;
+    tw_follow(get_instance(), $user);
 } elsif ($cmd eq 'update') {
     tw_update(get_instance(), @ARGV);
-} elsif ($cmd eq 'recent') {
+} elsif ($cmd eq 'status') {
     tw_list(get_instance());
+} elsif ($cmd eq 'following') {
+    tw_get_following(get_instance());
+} elsif ($cmd eq 'follower') {
+    tw_get_follower(get_instance());
 } else {
     usage();
 }
@@ -41,10 +50,16 @@ sub usage {
 twpin version $VERSION
 twpin config [-u|--user] [-p|--pass] [-a|--apiurl]
         build or rebuild configuration file
-      recent
+      status 
         list recent tweets
       update "tweets"
         update tweets to twitter
+      follow screen_name
+        follow somebody on twitter
+      follower
+        list your followers
+      following
+        list your followings
       help
         show this message
 
@@ -64,20 +79,22 @@ sub get_instance {
 }
 
 __END__
-=head1 NAME1
 
-twpin - Just another command line twitter client
+=head1 NAME
+
+twpin - Just Another Command Line Twitter Client
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
     
     twpin config -u username -p password
     twpin config -a 'http://url/twip'
     twpin update "hello twitter"
-    twpin recent
+    twpin status
+    twpin follow perl_api
     twpin help
 
 =head1 DESCRIPTION
@@ -85,6 +102,8 @@ version 0.001
 C<twpin> is a script for you to access twitter from command line
 
 twip L<http://code.google.com/p/twip/> is a twitter API proxy in PHP. This script is created mainly because I can not find a good twitter client that supports this proxy 
+
+Configration file is located at $HOME/.twpinrc, you can just edit this file and add your username/password there.
 
 =head1 AUTHOR
 
