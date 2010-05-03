@@ -19,7 +19,7 @@ my %WriteMakefileArgs = (
                        'EXE_FILES' => [
                                         'bin/twpin'
                                       ],
-                       'VERSION' => '0.002',
+                       'VERSION' => '0.003',
                        'LICENSE' => 'perl',
                        'PREREQ_PM' => {
                                         'ExtUtils::MakeMaker' => '6.11',

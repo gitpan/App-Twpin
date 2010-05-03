@@ -6,17 +6,17 @@ use Env qw/HOME/;
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
 use File::Spec::Functions;
-use Encode qw/encode decode is_utf8/;
+use Encode qw/encode decode is_utf8 find_encoding/;
 use base qw/Exporter/;
 
-our $VERSION = 0.002;
+our $VERSION = 0.003;
 
 our @EXPORT = qw//;
 our @EXPORT_OK =
-  qw/tw_config tw_update tw_load_config tw_list tw_get_follower tw_get_following tw_follow/;
+  qw/tw_config tw_update tw_load_config tw_list tw_get_follower tw_get_following tw_follow tw_unfollow/;
 our %EXPORT_TAGS = (
     all => [
-        qw/tw_config tw_update tw_load_config tw_list tw_get_follower tw_get_following tw_follow/
+        qw/tw_config tw_update tw_load_config tw_list tw_get_follower tw_get_following tw_follow tw_unfollow/
     ]
 );
 
@@ -25,7 +25,7 @@ my $config_file = catfile($HOME, '.twpinrc');
 sub tw_config {
     my %args = @_;
     my @array;
-    my %has = (user => 0, pass => 0, apiurl => 0);
+    my %has = (user => 0, pass => 0, apiurl => 0, encode => 0);
     tie @array, 'Tie::File', $config_file or croak $!;
     foreach (@array) {
         if (/^user\s*=/) {
@@ -37,6 +37,9 @@ sub tw_config {
         } elsif (/^apiurl\s*=/) {
             defined $args{apiurl} and $_ = "apiurl = $args{apiurl}";
             $has{apiurl}++;
+        } elsif (/^encode\s*=/) {
+            defined $args{encode} and $_ = "encode = $args{encode}";
+            $has{encode}++;
         } elsif (/^\s*$/) {
             next;
         } else {
@@ -46,6 +49,7 @@ sub tw_config {
     foreach (keys %args) {
         !$has{$_} && push @array, "$_ = $args{$_}";
     }
+    print "configuration updated\n";
     untie @array;
 }
 
@@ -68,11 +72,12 @@ sub tw_load_config {
 }
 
 sub tw_update {
-    my $twc = shift;
+    my $twc    = shift;
+    my $encode = _term_encoding();
     foreach my $tweet (@_) {
-        eval { $twc->update($tweet) };
+        eval { $twc->update(decode($encode, $tweet)) };
         if ($@) {
-            tw_error_handle($@);
+            _error_handle($@);
         } else {
             print("status updated\n");
         }
@@ -83,7 +88,7 @@ sub tw_list {
     my $twc = shift;
     my $statuses;
     eval { $statuses = $twc->friends_timeline() };
-    tw_error_handle($@) if ($@);
+    _error_handle($@) if ($@);
 
     foreach my $status (@$statuses) {
         my $create = (split '\+', $status->{created_at}, 2)[0];
@@ -97,7 +102,7 @@ sub tw_get_follower {
     my $twc = shift;
     my $followers;
     eval { $followers = $twc->followers() };
-    tw_error_handle($@) if $@;
+    _error_handle($@) if $@;
     print scalar @$followers, " followers received from twitter\n\n";
     foreach my $follower (@$followers) {
         printf("%-15s\t%-15s",
@@ -113,7 +118,7 @@ sub tw_get_following {
     my $twc = shift;
     my $following;
     eval { $following = $twc->friends() };
-    tw_error_handle($@) if $@;
+    _error_handle($@) if $@;
     print scalar @$following, " followings received from twitter\n\n";
     foreach my $friend (@$following) {
         printf("%-15s\t%-15s", _($friend->{name}), _($friend->{screen_name}));
@@ -122,7 +127,7 @@ sub tw_get_following {
     }
 }
 
-sub tw_error_handle($) {
+sub _error_handle($) {
     my $error = shift;
     if (blessed $error && $error->isa('Net::Twitter::Error')) {
         print STDERR $error->error, "\n";
@@ -136,11 +141,30 @@ sub tw_follow {
     my ($twc, $screen_name) = @_;
     my $friend;
     eval { $friend = $twc->create_friend($screen_name) };
-    tw_error_handle($@) if $@;
+    _error_handle($@) if $@;
     print "OK, you are now following:\n";
     printf("%-15s\t%-15s", _($friend->{name}), _($friend->{screen_name}));
     printf("\t%s", _($friend->{location})) if defined $friend->{location};
     print "\n";
+}
+
+sub tw_unfollow {
+    my ($twc, $screen_name) = @_;
+    eval { $twc->destroy_friend($screen_name) };
+    _error_handle($@) if $@;
+    print("unfollowed\n");
+}
+
+sub _term_encoding {
+    my ($encode, @array);
+    tie @array, 'Tie::File', $config_file or croak $!;
+
+    foreach (@array) {
+        /^encode\s*=\s*(.*?)\s*$/ and $encode = $1 and last;
+    }
+    return 'utf8' unless defined $encode;
+    croak "Unknow encoding $encode" unless ref(find_encoding($encode));
+    return $encode;
 }
 
 sub _ {

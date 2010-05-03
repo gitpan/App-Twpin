@@ -1,37 +1,43 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 use Net::Twitter;
 use Getopt::Long;
-use lib '../lib';
 use App::Twpin ':all';
 use Carp qw/carp croak/;
 
-our $VERSION = 0.002;
+our $VERSION = 0.003;
 
 my @commands = qw/config update/;
 my $cmd      = shift @ARGV;
 
+die "Not implemented on Win32 yet" if $^O eq "MSWin32";
 my $twpin;
 
 if (!defined $cmd) {
     usage();
 } elsif ($cmd eq 'config') {
-    my ($user, $password, $apiurl, %opt);
+    my ($user, $password, $apiurl, %opt, $encode);
     GetOptions(
         "user=s"   => \$user,
         "pass=s"   => \$pass,
         "apiurl=s" => \$apiurl,
+        "encode=s" => \$encode,
     ) or usage();
 
-    !$user && !$pass && !$apiurl && usage();
+    !$user && !$pass && !$apiurl && !$encode && usage();
     $user   and $opt{user}   = $user;
     $pass   and $opt{pass}   = $pass;
     $apiurl and $opt{apiurl} = $apiurl;
+    $encode and $opt{encode} = $encode;
 
     tw_config(%opt);
 } elsif ($cmd eq 'follow') {
     my $user;
     usage() unless $user = shift;
     tw_follow(get_instance(), $user);
+} elsif ($cmd eq 'unfollow') {
+    my $user;
+    usage() unless $user = shift;
+    tw_unfollow(get_instance(), $user);
 } elsif ($cmd eq 'update') {
     tw_update(get_instance(), @ARGV);
 } elsif ($cmd eq 'status') {
@@ -86,7 +92,7 @@ twpin - Just Another Command Line Twitter Client
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
     
@@ -104,6 +110,8 @@ C<twpin> is a script for you to access twitter from command line
 twip L<http://code.google.com/p/twip/> is a twitter API proxy in PHP. This script is created mainly because I can not find a good twitter client that supports this proxy 
 
 Configration file is located at $HOME/.twpinrc, you can just edit this file and add your username/password there.
+
+By default, the term encoding is set to utf8. If you are using other encodings, set encode = STH in the configuration file(or use 'twpin config -e').
 
 =head1 AUTHOR
 
