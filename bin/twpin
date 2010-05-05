@@ -4,12 +4,12 @@ use Getopt::Long;
 use App::Twpin ':all';
 use Carp qw/carp croak/;
 
-our $VERSION = 0.003;
+our $VERSION = 0.004;
 
 my @commands = qw/config update/;
 my $cmd      = shift @ARGV;
 
-die "Not implemented on Win32 yet" if $^O eq "MSWin32";
+#die "Not implemented on Win32 yet" if $^O eq "MSWin32";
 my $twpin;
 
 if (!defined $cmd) {
@@ -62,6 +62,8 @@ twpin config [-u|--user] [-p|--pass] [-a|--apiurl]
         update tweets to twitter
       follow screen_name
         follow somebody on twitter
+      unfollow screen_name
+        unfollow somebody on twitter
       follower
         list your followers
       following
@@ -85,40 +87,3 @@ sub get_instance {
 }
 
 __END__
-
-=head1 NAME
-
-twpin - Just Another Command Line Twitter Client
-
-=head1 VERSION
-
-version 0.003
-
-=head1 SYNOPSIS
-    
-    twpin config -u username -p password
-    twpin config -a 'http://url/twip'
-    twpin update "hello twitter"
-    twpin status
-    twpin follow perl_api
-    twpin help
-
-=head1 DESCRIPTION
-
-C<twpin> is a script for you to access twitter from command line
-
-twip L<http://code.google.com/p/twip/> is a twitter API proxy in PHP. This script is created mainly because I can not find a good twitter client that supports this proxy 
-
-Configration file is located at $HOME/.twpinrc, you can just edit this file and add your username/password there.
-
-By default, the term encoding is set to utf8. If you are using other encodings, set encode = STH in the configuration file(or use 'twpin config -e').
-
-=head1 AUTHOR
-
-woosley.xu<redicaps@gmail.com>
-
-=head1 COPYRIGHT & LICENSE
-
-This software is copyright (c) 2010 by woosley.xu.
-
-This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.

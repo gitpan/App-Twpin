@@ -2,16 +2,19 @@
 abstract: 'Just Another Command Line Twitter Client'
 author:
   - woosley.xu
-generated_by: 'Dist::Zilla version 1.100160'
+build_requires: {}
+configure_requires:
+  ExtUtils::MakeMaker: 6.31
+generated_by: 'Dist::Zilla version 2.101241'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: App-Twpin
+recommends: {}
 requires:
-  ExtUtils::MakeMaker: 6.11
   Net::Twitter: 3.12000
   Tie::File: 0
 resources:
   repository: http://github.com/woosley/Perl-App-Twpin
-version: 0.003
+version: 0.004

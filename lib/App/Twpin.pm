@@ -9,7 +9,7 @@ use File::Spec::Functions;
 use Encode qw/encode decode is_utf8 find_encoding/;
 use base qw/Exporter/;
 
-our $VERSION = 0.003;
+our $VERSION = 0.004;
 
 our @EXPORT = qw//;
 our @EXPORT_OK =
@@ -170,7 +170,7 @@ sub _term_encoding {
 sub _ {
     my $string = shift;
     if (is_utf8($string)) {
-        $string = encode 'utf8', $string;
+        $string = encode _term_encoding(), $string;
     }
     return $string;
 }
@@ -178,3 +178,40 @@ sub _ {
 1;
 
 __END__
+
+=head1 NAME
+
+twpin - Just Another Command Line Twitter Client
+
+=head1 VERSION
+
+version 0.004
+
+=head1 SYNOPSIS
+    
+    twpin config -u username -p password
+    twpin config -a 'http://url/twip'
+    twpin update "hello twitter"
+    twpin follow perl_api
+    twpin status
+    twpin help
+
+=head1 DESCRIPTION
+
+C<twpin> is a script for you to access twitter from command line
+
+twip L<http://code.google.com/p/twip/> is a twitter API proxy in PHP. This script is created mainly because I can not find a good twitter client that supports this proxy 
+
+Configration file is located at $HOME/.twpinrc, you can just edit this file and add your username/password there.
+
+By default, the term encoding is set to utf8. If you are using other encodings, set 'encode = STH' in the configuration file(or use 'twpin config -e').
+
+=head1 AUTHOR
+
+woosley.xu<redicaps@gmail.com>
+
+=head1 COPYRIGHT & LICENSE
+
+This software is copyright (c) 2010 by woosley.xu.
+
+This is free software; you can redistribute it and/or modify it under the same terms as the Perl 5 programming language system itself.
