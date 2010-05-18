@@ -4,7 +4,7 @@ use Getopt::Long;
 use App::Twpin ':all';
 use Carp qw/carp croak/;
 
-our $VERSION = 0.004;
+our $VERSION = 0.005;
 
 my @commands = qw/config update/;
 my $cmd      = shift @ARGV;

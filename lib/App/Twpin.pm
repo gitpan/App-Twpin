@@ -3,13 +3,14 @@ use strict;
 use warnings;
 use Tie::File;
 use Env qw/HOME/;
+use FindBin qw/$Bin/;
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
 use File::Spec::Functions;
 use Encode qw/encode decode is_utf8 find_encoding/;
 use base qw/Exporter/;
 
-our $VERSION = 0.004;
+our $VERSION = 0.005;
 
 our @EXPORT = qw//;
 our @EXPORT_OK =
@@ -21,6 +22,9 @@ our %EXPORT_TAGS = (
 );
 
 my $config_file = catfile($HOME, '.twpinrc');
+if ($^O eq 'MSWin32') {
+	$config_file = catfile($Bin, '.twpinrc');
+}
 
 sub tw_config {
     my %args = @_;
@@ -185,7 +189,7 @@ twpin - Just Another Command Line Twitter Client
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
     

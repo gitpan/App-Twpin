@@ -17,4 +17,4 @@ requires:
   Tie::File: 0
 resources:
   repository: http://github.com/woosley/Perl-App-Twpin
-version: 0.004
+version: 0.005
