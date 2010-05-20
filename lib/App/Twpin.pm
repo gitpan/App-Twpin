@@ -1,16 +1,16 @@
 package App::Twpin;
 use strict;
 use warnings;
+use FindBin;
 use Tie::File;
 use Env qw/HOME/;
-use FindBin qw/$Bin/;
 use Carp qw/carp croak/;
 use Scalar::Util qw/blessed/;
 use File::Spec::Functions;
 use Encode qw/encode decode is_utf8 find_encoding/;
 use base qw/Exporter/;
 
-our $VERSION = 0.005;
+our $VERSION = 0.006;
 
 our @EXPORT = qw//;
 our @EXPORT_OK =
@@ -23,6 +23,7 @@ our %EXPORT_TAGS = (
 
 my $config_file = catfile($HOME, '.twpinrc');
 if ($^O eq 'MSWin32') {
+	use autouse FindBin => qw($Bin);
 	$config_file = catfile($Bin, '.twpinrc');
 }
 
@@ -189,7 +190,7 @@ twpin - Just Another Command Line Twitter Client
 
 =head1 VERSION
 
-version 0.005
+version 0.006
 
 =head1 SYNOPSIS
     
@@ -206,9 +207,12 @@ C<twpin> is a script for you to access twitter from command line
 
 twip L<http://code.google.com/p/twip/> is a twitter API proxy in PHP. This script is created mainly because I can not find a good twitter client that supports this proxy 
 
-Configration file is located at $HOME/.twpinrc, you can just edit this file and add your username/password there.
+Note on the recent OAuth-Supported twip, you can not use your email to access twitter, so always use Screename as your username to login
+
+Configration file is located at $HOME(or $Bin on MSWin32)/.twpinrc, you can just edit this file and add your username/password there.
 
 By default, the term encoding is set to utf8. If you are using other encodings, set 'encode = STH' in the configuration file(or use 'twpin config -e').
+
 
 =head1 AUTHOR
 

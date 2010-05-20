@@ -4,7 +4,7 @@ use Getopt::Long;
 use App::Twpin ':all';
 use Carp qw/carp croak/;
 
-our $VERSION = 0.005;
+our $VERSION = 0.006;
 
 my @commands = qw/config update/;
 my $cmd      = shift @ARGV;
@@ -54,7 +54,7 @@ sub usage {
     print STDERR <<"usage";
 
 twpin version $VERSION
-twpin config [-u|--user] [-p|--pass] [-a|--apiurl]
+twpin config [-u|--user] [-p|--pass] [-a|--apiurl] [-e|--encode]
         build or rebuild configuration file
       status 
         list recent tweets

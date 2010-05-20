@@ -5,7 +5,8 @@ SYNOPSIS
         twpin config -u username -p password
         twpin config -a 'http://url/twip'
         twpin update "hello twitter"
-        twpin status 
+        twpin follow perl_api
+        twpin status
         twpin help
 
 DESCRIPTION
@@ -15,8 +16,15 @@ DESCRIPTION
     This script is created mainly because I can not find a good twitter
     client that supports this proxy
 
-    Configration file is located at $HOME/.twpinrc, you can just edit this
-    file and add your username/password there.
+    Note on the recent OAuth-Supported twip, you can not use your email to
+    access twitter, so always use Screename as your username to login
+
+    Configration file is located at $HOME(or $Bin on MSWin32)/.twpinrc, you
+    can just edit this file and add your username/password there.
+
+    By default, the term encoding is set to utf8. If you are using other
+    encodings, set 'encode = STH' in the configuration file(or use 'twpin
+    config -e').
 
 AUTHOR
     woosley.xu<redicaps@gmail.com>
