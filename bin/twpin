@@ -4,12 +4,11 @@ use Getopt::Long;
 use App::Twpin ':all';
 use Carp qw/carp croak/;
 
-our $VERSION = 0.006;
+our $VERSION = 0.007;
 
 my @commands = qw/config update/;
 my $cmd      = shift @ARGV;
 
-#die "Not implemented on Win32 yet" if $^O eq "MSWin32";
 my $twpin;
 
 if (!defined $cmd) {
@@ -41,7 +40,9 @@ if (!defined $cmd) {
 } elsif ($cmd eq 'update') {
     tw_update(get_instance(), @ARGV);
 } elsif ($cmd eq 'status') {
-    tw_list(get_instance());
+	my $user;
+    GetOptions("user=s" => \$user,);
+    tw_list(get_instance(), $user);
 } elsif ($cmd eq 'following') {
     tw_get_following(get_instance());
 } elsif ($cmd eq 'follower') {
@@ -56,8 +57,8 @@ sub usage {
 twpin version $VERSION
 twpin config [-u|--user] [-p|--pass] [-a|--apiurl] [-e|--encode]
         build or rebuild configuration file
-      status 
-        list recent tweets
+      status [-u|--user screenname]
+        list recent status
       update "tweets"
         update tweets to twitter
       follow screen_name

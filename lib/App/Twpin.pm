@@ -10,7 +10,7 @@ use File::Spec::Functions;
 use Encode qw/encode decode is_utf8 find_encoding/;
 use base qw/Exporter/;
 
-our $VERSION = 0.006;
+our $VERSION = 0.007;
 
 our @EXPORT = qw//;
 our @EXPORT_OK =
@@ -23,8 +23,8 @@ our %EXPORT_TAGS = (
 
 my $config_file = catfile($HOME, '.twpinrc');
 if ($^O eq 'MSWin32') {
-	use autouse FindBin => qw($Bin);
-	$config_file = catfile($Bin, '.twpinrc');
+    use autouse FindBin => qw($Bin);
+    $config_file = catfile($Bin, '.twpinrc');
 }
 
 sub tw_config {
@@ -90,9 +90,13 @@ sub tw_update {
 }
 
 sub tw_list {
-    my $twc = shift;
+    my ($twc, $user) = @_;
     my $statuses;
-    eval { $statuses = $twc->friends_timeline() };
+    if (defined $user) {
+        eval { $statuses = $twc->user_timeline({id => $user}) };
+    } else {
+        eval { $statuses = $twc->friends_timeline() };
+    }
     _error_handle($@) if ($@);
 
     foreach my $status (@$statuses) {
@@ -100,7 +104,6 @@ sub tw_list {
         print _($status->{user}{screen_name}), "\t", _($create), "\n",
           _($status->{text}), "\n\n";
     }
-
 }
 
 sub tw_get_follower {
@@ -190,7 +193,7 @@ twpin - Just Another Command Line Twitter Client
 
 =head1 VERSION
 
-version 0.006
+version 0.007
 
 =head1 SYNOPSIS
     

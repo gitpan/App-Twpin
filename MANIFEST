@@ -3,7 +3,6 @@ MANIFEST
 META.yml
 Makefile.PL
 README
-Readme
 bin/twpin
 dist.ini
 lib/App/Twpin.pm
